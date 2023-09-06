@@ -19,7 +19,7 @@
 #define FileStream std::fstream
 
 enum class TokenType {
-    _return,
+    exit,
     int_lit,
     semi
 };
@@ -43,8 +43,8 @@ Vector<Token> tokenize(const String& str) {
             }
             i--;
 
-            if (buf == "return") {
-                tokens.push_back({.type = TokenType::_return});
+            if (buf == "exit") {
+                tokens.push_back({.type = TokenType::exit});
                 buf.clear();
                 continue;
             } else {
@@ -80,7 +80,7 @@ String tokens_to_asm(const Vector<Token> notNull tokens) {
     output << "global _main\n_main:\n";
     for (int i = 0; i < tokens.size(); i++) {
         const Token notNull token = tokens.at(i);
-        if (token.type == TokenType::_return) {
+        if (token.type == TokenType::exit) {
             if (i+ 1 < tokens.size() && tokens.at(i + 1).type == TokenType::int_lit) {
                 if (i+ 2 < tokens.size() && tokens.at(i + 2).type == TokenType::semi) {
                     // 0x2000000 is a magic number that needs to be added to the bsd syscalls when on macOS. MacOS uses bsd syscalls
