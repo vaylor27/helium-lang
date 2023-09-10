@@ -26,8 +26,12 @@ Vector<Token> tokenize(const String& str) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
+    if (argc < 2) {
         error << "Requires Helium File (.he Extension) As Argument" << std::endl;
+        return EXIT_FAILURE;
+    }
+    if (argc < 3) {
+        error << "Requires OS As Argument [Linux, BSD, or MacOS]" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -50,7 +54,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    Generator generator(root.value());
+    Generator generator(root.value(), argv[2]);
 
     {
         FileStream file("out.asm", out);
