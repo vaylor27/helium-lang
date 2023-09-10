@@ -2,10 +2,7 @@
 
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <vector>
-#define stringify( name ) #name
 
 enum class TokenType {
     exit,

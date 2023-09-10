@@ -4,7 +4,7 @@
 
 class Generator {
     public:
-        inline explicit Generator(NodeProgram pRoot, std::string os): root(std::move(pRoot)) {
+        inline explicit Generator(NodeProgram pRoot, const std::string& os): root(std::move(pRoot)) {
             if (os == "MacOS") {
                 main_name.assign("_main");
                 std::stringstream name;
@@ -18,7 +18,7 @@ class Generator {
             }
         }
 
-        void assign(std::string& var, std::stringstream& stream) const {
+        static void assign(std::string& var, std::stringstream& stream) {
             var.assign(stream.str());
             stream.clear();
             std::cerr << var;

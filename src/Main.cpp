@@ -10,20 +10,10 @@
 #define String std::string
 #define StringStream std::stringstream
 #define Vector std::vector
-#define Optional std::optional
-#define newLine std::endl
-#define isAlphabeticCharacter std::isalpha
-#define isAlphabeticOrNumericCharacter std::isalpha
 #define error std::cerr
-#define print std::cout
 #define in std::ios::in
 #define out std::ios::out
-#define notNull &
 #define FileStream std::fstream
-
-Vector<Token> tokenize(const String& str) {
-
-}
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
