@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,6 +7,7 @@
 #include "Tokenization.cpp"
 #include "Parser.cpp"
 #include "Generation.cpp"
+#include "AstPrinter.cpp"
 
 #define String std::string
 #define StringStream std::stringstream
@@ -43,6 +45,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "No exit node found!" << std::endl;
         exit(EXIT_FAILURE);
     }
+    ASTPrinter printer(root.value());
+    std::cout << printer.generateProgram();
 
     Generator generator(root.value(), argv[2]);
 

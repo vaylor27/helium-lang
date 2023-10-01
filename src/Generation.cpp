@@ -1,5 +1,8 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
 #pragma once
 
+#include <sstream>
 #include "./Parser.cpp"
 
 class Generator {
@@ -57,6 +60,30 @@ class Generator {
             std::visit(visitor, term->var);
         }
 
+        void generateBinaryExpr(const NodeBinExpr* binExpr) {
+            struct BinExprVisitor{
+                Generator* generator;
+                void operator()(const NodeBinExprAdd* add) const {
+                    generator->generateExpr(add->lhs);
+                    generator->generateExpr(add->rhs);
+                    generator->pop("rax");
+                    generator->pop("rbx");
+                    generator->output << "    add rax, rbx\n";
+                    generator->push("rax");
+                }
+                void operator()(const NodeBinExprMulti* multi) const {
+                    generator->generateExpr(multi->lhs);
+                    generator->generateExpr(multi->rhs);
+                    generator->pop("rax");
+                    generator->pop("rbx");
+                    generator->output << "    mul rbx\n";
+                    generator->push("rax");
+                }
+            };
+            BinExprVisitor visitor({.generator = this});
+            std::visit(visitor, binExpr->var);
+        }
+
         void generateExpr(const NodeExpr* expr) {
             struct ExprVisitor {
                 Generator* generator;
@@ -66,12 +93,7 @@ class Generator {
                 }
 
                 void operator()(const NodeBinExpr* binExpr) const {
-                    generator->generateExpr(binExpr->var->lhs);
-                    generator->generateExpr(binExpr->var->rhs);
-                    generator->pop("rax");
-                    generator->pop("rbx");
-                    generator->output << "    add rax, rbx\n";
-                    generator->push("rax");
+                    generator->generateBinaryExpr(binExpr);
                 }
             };
 
@@ -104,6 +126,7 @@ class Generator {
             StmtVisitor visitor{.generator = this};
             std::visit(visitor, stmt->var);
         }
+
 
         [[nodiscard]] std::string generateProgram() {
             output << "global " << main_name << "\n" << main_name << ":\n";

@@ -13,8 +13,30 @@ enum class TokenType {
     ident,
     var,
     eq,
-    plus
+    plus,
+    star
 };
+
+bool isBinaryOperator(TokenType type) {
+    switch (type) {
+        case TokenType::plus:
+        case TokenType::star:
+            return true;
+        default:
+            return false;
+    }
+}
+
+std::optional<int> binaryPrecedence(TokenType type) {
+    switch (type) {
+        case TokenType::plus:
+            return 0;
+        case TokenType::star:
+            return 1;
+        default:
+            return {};
+    }
+}
 
 struct Token {
     TokenType type;
@@ -57,6 +79,7 @@ class Tokenizer {
                     tokens.push_back({.type = TokenType::int_lit, .value = buf});
                     buf.clear();
                     continue;
+                //TODO: make this whole section here into a token string which is checked for
                 } else if (peek().value() == '(') {
                     consume();
                     tokens.push_back({.type = TokenType::open_paren});
@@ -74,6 +97,10 @@ class Tokenizer {
                 else if (peek().value() == '+') {
                     consume();
                     tokens.push_back({.type = TokenType::plus});
+                    continue;
+                } else if (peek().value() == '*') {
+                    consume();
+                    tokens.push_back({.type = TokenType::star});
                     continue;
                 }
                 else if (peek().value() == '=') {
